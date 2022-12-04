@@ -1,4 +1,7 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -8,6 +11,16 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  final ImagePicker _imagePicker = ImagePicker();
+  XFile? xFile;
+  File? file;
+  addImage() async {
+    xFile = await _imagePicker.pickImage(source: ImageSource.camera);
+    file = File(xFile!.path);
+
+    setState(() {});
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -22,8 +35,13 @@ class _HomePageState extends State<HomePage> {
               child: Placeholder(),
             ),
             Expanded(
-                child: IconButton(
-                    onPressed: () {}, icon: Icon(Icons.camera_alt_rounded)))
+                child: file == null
+                    ? IconButton(
+                        onPressed: () async {
+                          addImage();
+                        },
+                        icon: Icon(Icons.camera_alt_rounded))
+                    : Image.file(file!))
           ],
         ),
       ),
